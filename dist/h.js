@@ -4,19 +4,19 @@ function h(name, attrs) {
   var children = [], len = arguments.length - 2;
   while ( len-- > 0 ) children[ len ] = arguments[ len + 2 ];
 
-  var el = document.createElement(name || "div");
+  var el = document.createElement(name || 'div');
   for (var k in attrs) {
     var v = attrs[k];
     if (v != null) {
-      if (k === "dataset") {
+      if (k === 'dataset') {
         for (var e in v) {
           var e2 = v[e];
           if (e2 != null) {
             el.dataset[e] = e2;
           }
         }
-      } else if (k === "style") {
-        if (typeof v === "string") {
+      } else if (k === 'style') {
+        if (typeof v === 'string') {
           el.style.cssText = v;
         } else {
           for (var e$1 in v) {
@@ -26,10 +26,10 @@ function h(name, attrs) {
             }
           }
         }
-      } else if (k in el || typeof v === "function") {
+      } else if (k in el || typeof v === 'function') {
         el[k] = v;
         if (v === true) {
-          el.setAttribute(k.toLowerCase(), "");
+          el.setAttribute(k.toLowerCase(), '');
         }
       } else {
         el.setAttribute(k, v);
@@ -37,7 +37,7 @@ function h(name, attrs) {
     }
   }
   appendChildren(el, children);
-  return el;
+  return el
 }
 
 function appendChildren(el, children) {
@@ -45,7 +45,7 @@ function appendChildren(el, children) {
     if (e != null) {
       if (e.nodeType) {
         el.appendChild(e);
-      } else if (typeof e === "string" || typeof e === "number") {
+      } else if (typeof e === 'string' || typeof e === 'number') {
         el.appendChild(document.createTextNode(e));
       } else if (e.length) {
         appendChildren(el, e);
