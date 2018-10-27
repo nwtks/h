@@ -1,1 +1,57 @@
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):e.h=t()}(this,function(){"use strict";return function(e,t){for(var n=[],o=arguments.length-2;0<o--;)n[o]=arguments[o+2];var i=document.createElement(e||"div");for(var r in t){var f=t[r];if(null!=f)if("dataset"===r)for(var u in f){var l=f[u];null!=l&&(i.dataset[u]=l)}else if("style"===r)if("string"==typeof f)i.style.cssText=f;else for(var s in f){var a=f[s];null!=a&&(i.style[s]=a)}else r in i||"function"==typeof f?!0===(i[r]=f)&&i.setAttribute(r.toLowerCase(),""):i.setAttribute(r,f)}return function t(n,e){e.forEach(function(e){null!=e&&(e.nodeType?n.appendChild(e):"string"==typeof e||"number"==typeof e?n.appendChild(document.createTextNode(e)):e.length&&t(n,e))})}(i,n),i}});
+'use strict';
+
+function h(name, attrs) {
+  var children = [], len = arguments.length - 2;
+  while ( len-- > 0 ) children[ len ] = arguments[ len + 2 ];
+
+  var el = document.createElement(name || "div");
+  for (var k in attrs) {
+    var v = attrs[k];
+    if (v != null) {
+      if (k === "dataset") {
+        for (var e in v) {
+          var e2 = v[e];
+          if (e2 != null) {
+            el.dataset[e] = e2;
+          }
+        }
+      } else if (k === "style") {
+        if (typeof v === "string") {
+          el.style.cssText = v;
+        } else {
+          for (var e$1 in v) {
+            var e2$1 = v[e$1];
+            if (e2$1 != null) {
+              el.style[e$1] = e2$1;
+            }
+          }
+        }
+      } else if (k in el || typeof v === "function") {
+        el[k] = v;
+        if (v === true) {
+          el.setAttribute(k.toLowerCase(), "");
+        }
+      } else {
+        el.setAttribute(k, v);
+      }
+    }
+  }
+  appendChildren(el, children);
+  return el;
+}
+
+function appendChildren(el, children) {
+  children.forEach(function (e) {
+    if (e != null) {
+      if (e.nodeType) {
+        el.appendChild(e);
+      } else if (typeof e === "string" || typeof e === "number") {
+        el.appendChild(document.createTextNode(e));
+      } else if (e.length) {
+        appendChildren(el, e);
+      }
+    }
+  });
+}
+
+module.exports = h;
