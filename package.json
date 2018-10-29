@@ -1,13 +1,13 @@
 {
-  "name": "h",
+  "name": "hel",
   "version": "0.0.1",
-  "description": "simple dom creator.",
+  "description": "simple HTMLElement creator.",
   "author": "nwtks",
   "license": "MIT",
   "main": "dist/h.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nwtks/h"
+    "url": "https://github.com/nwtks/hel"
   },
   "devDependencies": {
     "rollup": "^0.66.0",

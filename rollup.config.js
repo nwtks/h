@@ -3,18 +3,18 @@ import { uglify } from 'rollup-plugin-uglify'
 
 export default [
   {
-    input: 'src/h.js',
+    input: 'src/hel.js',
     output: {
-      file: 'dist/h.js',
+      file: 'dist/hel.js',
       format: 'cjs'
     },
     plugins: [buble()]
   },
   {
-    input: 'src/h.js',
+    input: 'src/hel.js',
     output: {
-      name: 'h',
-      file: 'dist/h-umd.js',
+      name: 'hel',
+      file: 'dist/hel-umd.js',
       format: 'umd'
     },
     plugins: [buble(), uglify()]
