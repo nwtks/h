@@ -1,4 +1,12 @@
-function h(name, attrs, ...children) {
+function h(name, attrs) {
+  const children = []
+  const arg = arguments
+  for (let i = 2; i < arg.length; i += 1) {
+    flatten(children, arg[i])
+  }
+  if (typeof name === 'function') {
+    return name(attrs || {}, children)
+  }
   const el = document.createElement(name || 'div')
   for (const k in attrs) {
     const v = attrs[k]
@@ -42,11 +50,19 @@ function appendChildren(el, children) {
         el.appendChild(e)
       } else if (typeof e === 'string' || typeof e === 'number') {
         el.appendChild(document.createTextNode(e))
-      } else if (e.length) {
+      } else if (Array.isArray(e)) {
         appendChildren(el, e)
       }
     }
   })
+}
+
+function flatten(dst, e) {
+  if (Array.isArray(e)) {
+    e.forEach(v => flatten(dst, v))
+  } else {
+    dst.push(e)
+  }
 }
 
 export default h

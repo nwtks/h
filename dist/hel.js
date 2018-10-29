@@ -1,9 +1,14 @@
 'use strict';
 
 function h(name, attrs) {
-  var children = [], len = arguments.length - 2;
-  while ( len-- > 0 ) children[ len ] = arguments[ len + 2 ];
-
+  var children = [];
+  var arg = arguments;
+  for (var i = 2; i < arg.length; i += 1) {
+    flatten(children, arg[i]);
+  }
+  if (typeof name === 'function') {
+    return name(attrs || {}, children)
+  }
   var el = document.createElement(name || 'div');
   for (var k in attrs) {
     var v = attrs[k];
@@ -47,11 +52,19 @@ function appendChildren(el, children) {
         el.appendChild(e);
       } else if (typeof e === 'string' || typeof e === 'number') {
         el.appendChild(document.createTextNode(e));
-      } else if (e.length) {
+      } else if (Array.isArray(e)) {
         appendChildren(el, e);
       }
     }
   });
+}
+
+function flatten(dst, e) {
+  if (Array.isArray(e)) {
+    e.forEach(function (v) { return flatten(dst, v); });
+  } else {
+    dst.push(e);
+  }
 }
 
 module.exports = h;
