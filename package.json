@@ -4,7 +4,7 @@
   "description": "simple HTMLElement creator.",
   "author": "nwtks",
   "license": "MIT",
-  "main": "dist/h.js",
+  "main": "dist/hel.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/nwtks/hel"
