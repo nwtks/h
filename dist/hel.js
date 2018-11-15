@@ -36,6 +36,10 @@ function h(name, attrs) {
         if (v === true) {
           el.setAttribute(k.toLowerCase(), '');
         }
+      } else if (typeof v === 'boolean') {
+        if (v === true) {
+          el.setAttribute(k, '');
+        }
       } else {
         el.setAttribute(k, v);
       }
