@@ -1,3 +1,7 @@
+const createElement = document.createElement
+const createTextNode = document.createTextNode
+const isArray = Array.isArray
+
 function h(name, attrs) {
   const children = []
   const arg = arguments
@@ -7,7 +11,7 @@ function h(name, attrs) {
   if (typeof name === 'function') {
     return name(attrs || {}, children)
   }
-  const el = document.createElement(name || 'div')
+  const el = createElement(name || 'div')
   for (const k in attrs) {
     const v = attrs[k]
     if (v != null) {
@@ -22,10 +26,10 @@ function h(name, attrs) {
         if (typeof v === 'string') {
           el.style.cssText = v
         } else {
-          for (const e in v) {
-            const e2 = v[e]
-            if (e2 != null) {
-              el.style[e] = e2
+          for (const e3 in v) {
+            const e4 = v[e3]
+            if (e4 != null) {
+              el.style[e3] = e4
             }
           }
         }
@@ -53,8 +57,8 @@ function appendChildren(el, children) {
       if (e.nodeType) {
         el.appendChild(e)
       } else if (typeof e === 'string' || typeof e === 'number') {
-        el.appendChild(document.createTextNode(e))
-      } else if (Array.isArray(e)) {
+        el.appendChild(createTextNode(e))
+      } else if (isArray(e)) {
         appendChildren(el, e)
       }
     }
@@ -62,7 +66,7 @@ function appendChildren(el, children) {
 }
 
 function flatten(dst, e) {
-  if (Array.isArray(e)) {
+  if (isArray(e)) {
     e.forEach(v => flatten(dst, v))
   } else {
     dst.push(e)

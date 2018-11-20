@@ -1,3 +1,3 @@
-# hel
+# hec
 
-simple HTMLElement creator.
+tiny HTMLElement creator.

@@ -1,5 +1,9 @@
 'use strict';
 
+var createElement = document.createElement;
+var createTextNode = document.createTextNode;
+var isArray = Array.isArray;
+
 function h(name, attrs) {
   var children = [];
   var arg = arguments;
@@ -9,7 +13,7 @@ function h(name, attrs) {
   if (typeof name === 'function') {
     return name(attrs || {}, children)
   }
-  var el = document.createElement(name || 'div');
+  var el = createElement(name || 'div');
   for (var k in attrs) {
     var v = attrs[k];
     if (v != null) {
@@ -24,10 +28,10 @@ function h(name, attrs) {
         if (typeof v === 'string') {
           el.style.cssText = v;
         } else {
-          for (var e$1 in v) {
-            var e2$1 = v[e$1];
-            if (e2$1 != null) {
-              el.style[e$1] = e2$1;
+          for (var e3 in v) {
+            var e4 = v[e3];
+            if (e4 != null) {
+              el.style[e3] = e4;
             }
           }
         }
@@ -55,8 +59,8 @@ function appendChildren(el, children) {
       if (e.nodeType) {
         el.appendChild(e);
       } else if (typeof e === 'string' || typeof e === 'number') {
-        el.appendChild(document.createTextNode(e));
-      } else if (Array.isArray(e)) {
+        el.appendChild(createTextNode(e));
+      } else if (isArray(e)) {
         appendChildren(el, e);
       }
     }
@@ -64,7 +68,7 @@ function appendChildren(el, children) {
 }
 
 function flatten(dst, e) {
-  if (Array.isArray(e)) {
+  if (isArray(e)) {
     e.forEach(function (v) { return flatten(dst, v); });
   } else {
     dst.push(e);
