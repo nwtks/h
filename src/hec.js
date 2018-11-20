@@ -1,5 +1,3 @@
-const createElement = document.createElement
-const createTextNode = document.createTextNode
 const isArray = Array.isArray
 
 function h(name, attrs) {
@@ -11,7 +9,7 @@ function h(name, attrs) {
   if (typeof name === 'function') {
     return name(attrs || {}, children)
   }
-  const el = createElement(name || 'div')
+  const el = document.createElement(name || 'div')
   for (const k in attrs) {
     const v = attrs[k]
     if (v != null) {
@@ -57,7 +55,7 @@ function appendChildren(el, children) {
       if (e.nodeType) {
         el.appendChild(e)
       } else if (typeof e === 'string' || typeof e === 'number') {
-        el.appendChild(createTextNode(e))
+        el.appendChild(document.createTextNode(e))
       } else if (isArray(e)) {
         appendChildren(el, e)
       }

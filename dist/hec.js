@@ -1,7 +1,5 @@
 'use strict';
 
-var createElement = document.createElement;
-var createTextNode = document.createTextNode;
 var isArray = Array.isArray;
 
 function h(name, attrs) {
@@ -13,7 +11,7 @@ function h(name, attrs) {
   if (typeof name === 'function') {
     return name(attrs || {}, children)
   }
-  var el = createElement(name || 'div');
+  var el = document.createElement(name || 'div');
   for (var k in attrs) {
     var v = attrs[k];
     if (v != null) {
@@ -59,7 +57,7 @@ function appendChildren(el, children) {
       if (e.nodeType) {
         el.appendChild(e);
       } else if (typeof e === 'string' || typeof e === 'number') {
-        el.appendChild(createTextNode(e));
+        el.appendChild(document.createTextNode(e));
       } else if (isArray(e)) {
         appendChildren(el, e);
       }
