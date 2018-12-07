@@ -34,7 +34,7 @@ function h(name, attrs) {
       } else if (k in el || typeof v === 'function') {
         el[k] = v
         if (v === true) {
-          el.setAttribute(k.toLowerCase(), '')
+          el.setAttribute(k, '')
         }
       } else if (typeof v === 'boolean') {
         if (v === true) {
