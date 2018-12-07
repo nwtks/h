@@ -1,74 +1,77 @@
 const isArray = Array.isArray
+const getOwnPropertyNames = Object.getOwnPropertyNames
 
-function h(name, attrs) {
-  const children = []
-  const arg = arguments
-  for (let i = 2; i < arg.length; i += 1) {
-    flatten(children, arg[i])
-  }
+const h = (name, attrs, ...args) => {
+  const children = flatten([], args)
   if (typeof name === 'function') {
     return name(attrs || {}, children)
   }
   const el = document.createElement(name || 'div')
-  for (const k in attrs) {
-    const v = attrs[k]
-    if (v != null) {
-      if (k === 'dataset') {
-        for (const e in v) {
-          const e2 = v[e]
-          if (e2 != null) {
-            el.dataset[e] = e2
+  attrs != null &&
+    getOwnPropertyNames(attrs)
+      .filter(k => attrs[k] != null)
+      .forEach(k => {
+        const v = attrs[k]
+        const vtype = typeof v
+        if (k === 'dataset') {
+          v != null &&
+            getOwnPropertyNames(v).forEach(e => {
+              const e2 = v[e]
+              if (e2 != null) {
+                el.dataset[e] = e2
+              }
+            })
+        } else if (k === 'style') {
+          if (vtype === 'string') {
+            el.style.cssText = v
+          } else {
+            v != null &&
+              getOwnPropertyNames(v).forEach(e => {
+                const e2 = v[e]
+                if (e2 != null) {
+                  el.style[e] = e2
+                }
+              })
           }
-        }
-      } else if (k === 'style') {
-        if (typeof v === 'string') {
-          el.style.cssText = v
+        } else if (k in el) {
+          el[k] = v
+          if (v === true) {
+            el.setAttribute(k, '')
+          }
+        } else if (vtype === 'function') {
+          el[k] = v
+        } else if (vtype === 'boolean') {
+          if (v === true) {
+            el.setAttribute(k, '')
+          }
         } else {
-          for (const e3 in v) {
-            const e4 = v[e3]
-            if (e4 != null) {
-              el.style[e3] = e4
-            }
-          }
+          el.setAttribute(k, v)
         }
-      } else if (k in el || typeof v === 'function') {
-        el[k] = v
-        if (v === true) {
-          el.setAttribute(k, '')
-        }
-      } else if (typeof v === 'boolean') {
-        if (v === true) {
-          el.setAttribute(k, '')
-        }
-      } else {
-        el.setAttribute(k, v)
-      }
-    }
-  }
+      })
   appendChildren(el, children)
   return el
 }
 
-function appendChildren(el, children) {
-  children.forEach(e => {
-    if (e != null) {
+const appendChildren = (el, children) =>
+  children
+    .filter(e => e != null)
+    .forEach(e => {
       if (e.nodeType) {
         el.appendChild(e)
-      } else if (typeof e === 'string' || typeof e === 'number') {
-        el.appendChild(document.createTextNode(e))
       } else if (isArray(e)) {
         appendChildren(el, e)
+      } else if (typeof e === 'string' || typeof e === 'number') {
+        el.appendChild(document.createTextNode(e))
       }
-    }
-  })
-}
+    })
 
-function flatten(dst, e) {
+const flatten = (dst, e) => {
   if (isArray(e)) {
     e.forEach(v => flatten(dst, v))
   } else {
     dst.push(e)
   }
+  return dst
 }
 
 export default h

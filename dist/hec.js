@@ -1,76 +1,81 @@
 'use strict';
 
 var isArray = Array.isArray;
+var getOwnPropertyNames = Object.getOwnPropertyNames;
 
-function h(name, attrs) {
-  var children = [];
-  var arg = arguments;
-  for (var i = 2; i < arg.length; i += 1) {
-    flatten(children, arg[i]);
-  }
+var h = function (name, attrs) {
+  var args = [], len = arguments.length - 2;
+  while ( len-- > 0 ) args[ len ] = arguments[ len + 2 ];
+
+  var children = flatten([], args);
   if (typeof name === 'function') {
     return name(attrs || {}, children)
   }
   var el = document.createElement(name || 'div');
-  for (var k in attrs) {
-    var v = attrs[k];
-    if (v != null) {
-      if (k === 'dataset') {
-        for (var e in v) {
-          var e2 = v[e];
-          if (e2 != null) {
-            el.dataset[e] = e2;
+  attrs != null &&
+    getOwnPropertyNames(attrs)
+      .filter(function (k) { return attrs[k] != null; })
+      .forEach(function (k) {
+        var v = attrs[k];
+        var vtype = typeof v;
+        if (k === 'dataset') {
+          v != null &&
+            getOwnPropertyNames(v).forEach(function (e) {
+              var e2 = v[e];
+              if (e2 != null) {
+                el.dataset[e] = e2;
+              }
+            });
+        } else if (k === 'style') {
+          if (vtype === 'string') {
+            el.style.cssText = v;
+          } else {
+            v != null &&
+              getOwnPropertyNames(v).forEach(function (e) {
+                var e2 = v[e];
+                if (e2 != null) {
+                  el.style[e] = e2;
+                }
+              });
           }
-        }
-      } else if (k === 'style') {
-        if (typeof v === 'string') {
-          el.style.cssText = v;
+        } else if (k in el) {
+          el[k] = v;
+          if (v === true) {
+            el.setAttribute(k, '');
+          }
+        } else if (vtype === 'function') {
+          el[k] = v;
+        } else if (vtype === 'boolean') {
+          if (v === true) {
+            el.setAttribute(k, '');
+          }
         } else {
-          for (var e3 in v) {
-            var e4 = v[e3];
-            if (e4 != null) {
-              el.style[e3] = e4;
-            }
-          }
+          el.setAttribute(k, v);
         }
-      } else if (k in el || typeof v === 'function') {
-        el[k] = v;
-        if (v === true) {
-          el.setAttribute(k, '');
-        }
-      } else if (typeof v === 'boolean') {
-        if (v === true) {
-          el.setAttribute(k, '');
-        }
-      } else {
-        el.setAttribute(k, v);
-      }
-    }
-  }
+      });
   appendChildren(el, children);
   return el
-}
+};
 
-function appendChildren(el, children) {
-  children.forEach(function (e) {
-    if (e != null) {
+var appendChildren = function (el, children) { return children
+    .filter(function (e) { return e != null; })
+    .forEach(function (e) {
       if (e.nodeType) {
         el.appendChild(e);
-      } else if (typeof e === 'string' || typeof e === 'number') {
-        el.appendChild(document.createTextNode(e));
       } else if (isArray(e)) {
         appendChildren(el, e);
+      } else if (typeof e === 'string' || typeof e === 'number') {
+        el.appendChild(document.createTextNode(e));
       }
-    }
-  });
-}
+    }); };
 
-function flatten(dst, e) {
+var flatten = function (dst, e) {
   if (isArray(e)) {
     e.forEach(function (v) { return flatten(dst, v); });
   } else {
     dst.push(e);
   }
-}
+  return dst
+};
 
 module.exports = h;
