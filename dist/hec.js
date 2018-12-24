@@ -9,7 +9,7 @@ var h = function (name, attrs) {
 
   var children = flatten([], args);
   if (typeof name === 'function') {
-    return name(attrs || {}, children)
+    return name(attrs || {}, children);
   }
   var el = document.createElement(name || 'div');
   attrs != null &&
@@ -22,9 +22,7 @@ var h = function (name, attrs) {
           v != null &&
             getOwnPropertyNames(v).forEach(function (e) {
               var e2 = v[e];
-              if (e2 != null) {
-                el.dataset[e] = e2;
-              }
+              e2 != null && (el.dataset[e] = e2);
             });
         } else if (k === 'style') {
           if (vtype === 'string') {
@@ -33,9 +31,7 @@ var h = function (name, attrs) {
             v != null &&
               getOwnPropertyNames(v).forEach(function (e) {
                 var e2 = v[e];
-                if (e2 != null) {
-                  el.style[e] = e2;
-                }
+                e2 != null && (el.style[e] = e2);
               });
           }
         } else if (k in el) {
@@ -54,10 +50,11 @@ var h = function (name, attrs) {
         }
       });
   appendChildren(el, children);
-  return el
+  return el;
 };
 
-var appendChildren = function (el, children) { return children
+var appendChildren = function (el, children) {
+  children
     .filter(function (e) { return e != null; })
     .forEach(function (e) {
       if (e.nodeType) {
@@ -67,15 +64,18 @@ var appendChildren = function (el, children) { return children
       } else if (typeof e === 'string' || typeof e === 'number') {
         el.appendChild(document.createTextNode(e));
       }
-    }); };
+    });
+};
 
 var flatten = function (dst, e) {
   if (isArray(e)) {
-    e.forEach(function (v) { return flatten(dst, v); });
+    e.forEach(function (v) {
+      flatten(dst, v);
+    });
   } else {
     dst.push(e);
   }
-  return dst
+  return dst;
 };
 
 module.exports = h;
